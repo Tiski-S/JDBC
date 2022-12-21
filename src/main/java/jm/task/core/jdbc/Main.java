@@ -19,10 +19,10 @@ public class Main {
 //        user.saveUser("Иван", "Семёныч", (byte) 23);
 //        user.saveUser("Андрей", "Сидорович", (byte) 34);
 //        user.saveUser("Вика", "Петрович", (byte) 45);
-        user1.saveUser("Да", "Нет", (byte) 103);
+//        user1.saveUser("Да", "Нет", (byte) 103);
 //        user.removeUserById(6);
 //        user.cleanUsersTable();
-        user1.getAllUsers();
+        System.out.println(user1.getAllUsers());
 
     }
 }

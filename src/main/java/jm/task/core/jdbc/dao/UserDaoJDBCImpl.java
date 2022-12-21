@@ -88,20 +88,11 @@ public class UserDaoJDBCImpl implements UserDao {
         String getAll = "select * from users";
         try (Connection con = Util.getConnection();
              Statement statement = con.createStatement()) {
+            con.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+            con.setAutoCommit(false);
             ResultSet resultSet = statement.executeQuery(getAll);
-
             List<User> users = new ArrayList<>();
             while (resultSet.next()) {
-//                int id;
-//                String name;
-//                String lastName;
-//                Byte age;
-//                id = resultSet.getInt("id");
-//                name = resultSet.getString("name");
-//                lastName = resultSet.getString("lastName");
-//                age = resultSet.getByte("age");
-//                User u = new User(name, lastName, age);
-//                System.out.println(u);
                 User user = new User();
                 user.setId(resultSet.getLong("id"));
                 user.setName(resultSet.getString("name"));
@@ -110,6 +101,7 @@ public class UserDaoJDBCImpl implements UserDao {
                 users.add(user);
 
             }
+            con.commit();
             return users;
         } catch (SQLException e) {
             throw new RuntimeException(e);
