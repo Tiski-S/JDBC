@@ -17,18 +17,12 @@ public class UserDaoJDBCImpl implements UserDao {
         String createTable = "create table users ( id int primary key auto_increment, name varchar(50) not null , lastName varchar(50) not null, age tinyint not null)";
         try(Connection con = Util.getConnection();
             Statement statement = con.createStatement()) {
-//            Statement statement = Util.getConnection().createStatement();
-//            statement.executeUpdate(createTable);
-//            Util.getConnection().createStatement().executeUpdate(createTable);
             statement.executeUpdate(createTable);
             System.out.println("Таблица создана!");
         }
         catch (Exception e){
             System.out.println("Error, таблица не заздалась!");
-//            e.printStackTrace();
-
         }
-
     }
 
     public void dropUsersTable() {
@@ -36,13 +30,11 @@ public class UserDaoJDBCImpl implements UserDao {
 
         try (Connection con = Util.getConnection();
              Statement statement = con.createStatement()) {
-//            Util.getConnection().createStatement().executeUpdate(dropTable);
             statement.executeUpdate(dropTable);
             System.out.println("Таблица удалена!");
         }
         catch (Exception e){
         System.out.println("Error, таблица не существует!");
-//            e.printStackTrace();
         }
 
     }
@@ -54,7 +46,6 @@ public class UserDaoJDBCImpl implements UserDao {
             con = Util.getConnection();
             con.setAutoCommit(false);
             con.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
-//            Util.getConnection().createStatement().executeUpdate(createUser);
             PreparedStatement preparedStatement = con.prepareStatement(createUser);
             preparedStatement.setString(1, name);
             preparedStatement.setString(2, lastName);
@@ -62,7 +53,6 @@ public class UserDaoJDBCImpl implements UserDao {
             preparedStatement.execute();
             con.commit();
             System.out.println("User с именем " + name + " добавлен!");
-
         }
         catch (Exception e){
             System.out.println("Error, User не добавлен!!");
@@ -71,16 +61,13 @@ public class UserDaoJDBCImpl implements UserDao {
             } catch (SQLException ex) {
                 System.out.println("Ошибка отката!");
             }
-//            e.printStackTrace();
         }
         finally {
             try {
                 con.close();
             } catch (SQLException e) {
-//                throw new RuntimeException(e);
             }
         }
-
     }
 
     public void removeUserById(long id) {
@@ -95,7 +82,6 @@ public class UserDaoJDBCImpl implements UserDao {
         }
         catch (Exception e){
             System.out.println("Error, User не удалён!");
-//            e.printStackTrace();
         }
 
     }
@@ -115,12 +101,10 @@ public class UserDaoJDBCImpl implements UserDao {
                 user.setLastName(resultSet.getString("lastName"));
                 user.setAge(resultSet.getByte("age"));
                 users.add(user);
-
             }
             con.commit();
             return users;
         } catch (SQLException e) {
-//            throw new RuntimeException(e);
             System.out.println("Ошибка вывода!");
         }
 
@@ -131,15 +115,12 @@ public class UserDaoJDBCImpl implements UserDao {
         String cleanTable = "delete from users";
         try (Connection con = Util.getConnection();
              Statement statement = con.createStatement()) {
-//            Util.getConnection().createStatement().executeUpdate(cleanTable);
             statement.executeUpdate(cleanTable);
             System.out.println("Все записи удалены!");
         }
         catch (Exception e){
             System.out.println("Error, записи не удаляются!");
-//            e.printStackTrace();
         }
-
     }
 
 }
