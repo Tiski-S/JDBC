@@ -16,9 +16,9 @@ public class Main {
         UserServiceImpl user1 = new UserServiceImpl();
 //        user.createUsersTable();
 //        user.dropUsersTable();
-//        user.saveUser("Иван", "Семёныч", (byte) 23);
-//        user.saveUser("Андрей", "Сидорович", (byte) 34);
-//        user.saveUser("Вика", "Петрович", (byte) 45);
+//        user1.saveUser("Иван", "Семёныч", (byte) 23);
+//        user1.saveUser("Андрей", "Сидорович", (byte) 34);
+//        user1.saveUser("Вика", "Петрович", (byte) 45);
 //        user1.saveUser("Да", "Нет", (byte) 103);
 //        user.removeUserById(6);
 //        user.cleanUsersTable();

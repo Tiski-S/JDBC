@@ -14,8 +14,8 @@ public class Util {
                 connection = DriverManager.getConnection(Url, UserName, Password);
 //                System.out.println("Подклютение к бд есть!");
             } catch (SQLException e) {
-//                System.out.println("Подключения к бд нет!");
-                throw new RuntimeException(e);
+                System.out.println("Подключения к бд нет!");
+//                throw new RuntimeException(e);
             }
         return connection;
         }

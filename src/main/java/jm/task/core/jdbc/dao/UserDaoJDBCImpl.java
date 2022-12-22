@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDaoJDBCImpl implements UserDao {
+
     public UserDaoJDBCImpl() {
 
     }
@@ -23,14 +24,16 @@ public class UserDaoJDBCImpl implements UserDao {
             System.out.println("Таблица создана!");
         }
         catch (Exception e){
-            System.out.println("Error1, таблица не заздалась!");
+            System.out.println("Error, таблица не заздалась!");
 //            e.printStackTrace();
+
         }
 
     }
 
     public void dropUsersTable() {
         String dropTable = "drop table users";
+
         try (Connection con = Util.getConnection();
              Statement statement = con.createStatement()) {
 //            Util.getConnection().createStatement().executeUpdate(dropTable);
@@ -38,31 +41,44 @@ public class UserDaoJDBCImpl implements UserDao {
             System.out.println("Таблица удалена!");
         }
         catch (Exception e){
-        System.out.println("Error2, таблица не существует!");
+        System.out.println("Error, таблица не существует!");
 //            e.printStackTrace();
         }
 
     }
 
     public void saveUser(String name, String lastName, byte age) {
-
-//        String createUser = "insert into users (name, lastName, age) VALUE (?, ?, ?)";
         String createUser = "insert into users VALUE (id, ?, ?, ?)";
-        try (Connection con = Util.getConnection()) {
-
+        Connection con = null;
+        try {
+            con = Util.getConnection();
+            con.setAutoCommit(false);
+            con.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
 //            Util.getConnection().createStatement().executeUpdate(createUser);
             PreparedStatement preparedStatement = con.prepareStatement(createUser);
             preparedStatement.setString(1, name);
             preparedStatement.setString(2, lastName);
             preparedStatement.setInt(3, age);
             preparedStatement.execute();
-
+            con.commit();
             System.out.println("User с именем " + name + " добавлен!");
 
         }
         catch (Exception e){
-            System.out.println("Error3, User не добавлен!!");
+            System.out.println("Error, User не добавлен!!");
+            try {
+                con.rollback();
+            } catch (SQLException ex) {
+                System.out.println("Ошибка отката!");
+            }
 //            e.printStackTrace();
+        }
+        finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+//                throw new RuntimeException(e);
+            }
         }
 
     }
@@ -78,7 +94,7 @@ public class UserDaoJDBCImpl implements UserDao {
             System.out.println("User удалён!");
         }
         catch (Exception e){
-            System.out.println("Error3, User не удалён!");
+            System.out.println("Error, User не удалён!");
 //            e.printStackTrace();
         }
 
@@ -104,10 +120,11 @@ public class UserDaoJDBCImpl implements UserDao {
             con.commit();
             return users;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+//            throw new RuntimeException(e);
+            System.out.println("Ошибка вывода!");
         }
 
-
+        return null;
     }
 
     public void cleanUsersTable() {
@@ -119,7 +136,7 @@ public class UserDaoJDBCImpl implements UserDao {
             System.out.println("Все записи удалены!");
         }
         catch (Exception e){
-            System.out.println("Error2, записи не удаляются!");
+            System.out.println("Error, записи не удаляются!");
 //            e.printStackTrace();
         }
 
