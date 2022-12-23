@@ -15,26 +15,59 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void createUsersTable() {
         String createTable = "create table users ( id int primary key auto_increment, name varchar(50) not null , lastName varchar(50) not null, age tinyint not null)";
-        try(Connection con = Util.getConnection();
-            Statement statement = con.createStatement()) {
+        Connection con = null;
+        Statement statement = null;
+        try {
+            con = Util.getConnection();
+            con.setAutoCommit(false);
+            con.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+            statement = con.createStatement();
             statement.executeUpdate(createTable);
+            con.commit();
             System.out.println("Таблица создана!");
         }
         catch (Exception e){
+            try {
+                con.rollback();
+            } catch (SQLException ex) {
+            }
             System.out.println("Error, таблица не заздалась!");
+        } finally {
+            try {
+                con.close();
+                statement.close();
+            } catch (SQLException e) {
+            }
         }
     }
 
     public void dropUsersTable() {
         String dropTable = "drop table users";
-
-        try (Connection con = Util.getConnection();
-             Statement statement = con.createStatement()) {
+        Connection con = null;
+        Statement statement = null;
+        try  {
+            con = Util.getConnection();
+            con.setAutoCommit(false);
+            con.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+            statement = con.createStatement();
             statement.executeUpdate(dropTable);
+            con.commit();
             System.out.println("Таблица удалена!");
         }
         catch (Exception e){
-        System.out.println("Error, таблица не существует!");
+            try {
+                con.rollback();
+            } catch (SQLException ex) {
+            }
+            System.out.println("Error, таблица не существует!");
+        }
+        finally {
+            try {
+                con.close();
+                statement.close();
+            } catch (SQLException e) {
+            }
+
         }
 
     }
@@ -72,26 +105,40 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void removeUserById(long id) {
         String deleteUser = "delete from users where id = ?";
-        try (Connection con = Util.getConnection()) {
-//            Util.getConnection().createStatement().executeUpdate(deleteUser);
+        Connection con = null;
+        try  {
+            con = Util.getConnection();
+            con.setAutoCommit(false);
+            con.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
             PreparedStatement preparedStatement = con.prepareStatement(deleteUser);
             preparedStatement.setLong(1, id);
             preparedStatement.execute();
-
+            con.commit();
             System.out.println("User удалён!");
-        }
-        catch (Exception e){
+        } catch (Exception e){
+            try {
+                con.rollback();
+            } catch (SQLException ex) {
+            }
             System.out.println("Error, User не удалён!");
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+            }
         }
 
     }
 
     public List<User> getAllUsers() {
         String getAll = "select * from users";
-        try (Connection con = Util.getConnection();
-             Statement statement = con.createStatement()) {
-            con.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+        Connection con = null;
+        Statement statement = null;
+        try {
+            con = Util.getConnection();
             con.setAutoCommit(false);
+            con.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+            statement = con.createStatement();
             ResultSet resultSet = statement.executeQuery(getAll);
             List<User> users = new ArrayList<>();
             while (resultSet.next()) {
@@ -101,11 +148,22 @@ public class UserDaoJDBCImpl implements UserDao {
                 user.setLastName(resultSet.getString("lastName"));
                 user.setAge(resultSet.getByte("age"));
                 users.add(user);
+                con.commit();
             }
             con.commit();
             return users;
         } catch (SQLException e) {
+            try {
+                con.rollback();
+            } catch (SQLException ex) {
+            }
             System.out.println("Ошибка вывода!");
+        } finally {
+            try {
+                con.close();
+                statement.close();
+            } catch (SQLException e) {
+            }
         }
 
         return null;
@@ -113,13 +171,30 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void cleanUsersTable() {
         String cleanTable = "delete from users";
-        try (Connection con = Util.getConnection();
-             Statement statement = con.createStatement()) {
+        Connection con = null;
+        Statement statement = null;
+        try  {
+            con = Util.getConnection();
+            con.setAutoCommit(false);
+            con.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+            statement = con.createStatement();
             statement.executeUpdate(cleanTable);
+            con.commit();
             System.out.println("Все записи удалены!");
         }
         catch (Exception e){
+            try {
+                con.rollback();
+            } catch (SQLException ex) {
+            }
             System.out.println("Error, записи не удаляются!");
+        }
+        finally {
+            try {
+                con.close();
+                statement.close();
+            } catch (SQLException e) {
+            }
         }
     }
 
